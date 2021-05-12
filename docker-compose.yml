@@ -1,0 +1,39 @@
+version: "3"
+services:
+  mongo:
+    image: mongo:4.4.0
+    container_name: curso-mongo
+    ports:
+      - 27017:27017
+    volumes:
+      - "./data:/data/db"
+    networks:
+      - mmendesk
+
+  mongo-test:
+    image: mongo:4.4.0
+    container_name: test-curso-mongo
+    ports:
+      - 27017:27017
+    volumes:
+      - "./data.test:/data/db"
+    networks:
+      - mmendesk
+
+  api:
+    container_name: back-curso
+    build:
+      context: .
+      dockerfile: ./docker/Dockerfile
+    volumes:
+      - .:/home/node/app
+    env_file:
+      - ./.env
+    ports:
+      - 3000:3000
+      - 9229:9229 #debug port
+    networks:
+      - mmendesk
+
+networks:
+  mmendesk:
